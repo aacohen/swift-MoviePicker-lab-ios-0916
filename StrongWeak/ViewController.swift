@@ -16,6 +16,8 @@ class ViewController: UIViewController {
     var thankYouLabel: UILabel!
     var movieImageView: UIImageView!
     
+    @IBOutlet weak var newTextLabel: UILabel!
+    
     @IBOutlet weak var movieLabelOne: UILabel!
     @IBOutlet weak var movieLabelTwo: UILabel!
     @IBOutlet weak var movieLabelThree: UILabel!
@@ -38,7 +40,16 @@ class ViewController: UIViewController {
 
 // MARK: - Actions
 extension ViewController {
-    
+    func updateTextLabel() {
+        for label in movieLabels {
+            if button.frame.intersects(label.frame) {
+                label.
+                searchFilm(label.text!)
+                break
+            }
+        }
+
+    }
     func handleTap(sender: UIButton) {
         
         for label in movieLabels {
@@ -109,9 +120,12 @@ extension ViewController {
             
             let posterURL = URL(string: posterString)!
             
-            self.button.isHidden = true
+            DispatchQueue.main.async {
+                self.button.isHidden = true
+                
+                self.downloadImage(at: posterURL)
+            }
             
-            self.downloadImage(at: posterURL)
             
             }.resume()
     }
@@ -126,9 +140,12 @@ extension ViewController {
             
             guard let imageData = data else { return }
             
-            let image = UIImage(data: imageData)!
+            DispatchQueue.main.async {
+                let image = UIImage(data: imageData)!
+                
+                self.display(image: image)
+            }
             
-            self.display(image: image)
             
             }.resume()
     }
